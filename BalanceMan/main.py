@@ -34,8 +34,8 @@ def init():
     game["clock"] = pygame.time.Clock()
     pygame.display.set_caption(GAME_NAME)
 
-def generate_border():
-    for i in range(0,50):
+def generate_border(width):
+    for i in range(0,width):
         if (i%2==0): green = Red
         else: green = Blue
         pygame.draw.rect(game["gameDisplay"],green,[i*2,i*2,WIDTH-4*i,HEIGHT-4*i],1)
@@ -116,7 +116,7 @@ def get_start_screen():
         index= (index+1)%(3*len(text_d))
 
         game["gameDisplay"].fill(Black)
-        generate_border()
+        generate_border(50)
         generate_text(xc,angle)
         generate_button(mpx,mpy)
         pygame.display.update()
@@ -127,9 +127,32 @@ def get_start_screen():
 
     return gameExit
 
+def get_game_screen():
+    global gameExit
+    gameExit=0
+
+    #Game Loop
+    while gameExit==0:
+        for event in pygame.event.get():
+            #Checking if exit/cross button at right top has been pressed
+            if event.type == pygame.QUIT:
+                gameExit = 2
+
+
+        game["gameDisplay"].fill(Black)
+        generate_border(20)
+        pygame.display.update()
+
+
+        #Setting frames per second
+        game["clock"].tick(FPS)
+
+    return gameExit
+
 def main():
     init()
-    get_start_screen()
+    gameExit = get_start_screen()
+    if(gameExit==1): gameExit = get_game_screen()
     pygame.quit()
     quit()
     
